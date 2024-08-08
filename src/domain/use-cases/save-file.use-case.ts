@@ -19,7 +19,7 @@ export class SaveFile implements SaveFileUseCase {
 
   execute( {
     fileContent,
-    fileDestination = 'outputs/tablas', 
+    fileDestination = 'outputs', 
     fileName = 'table'
   }: Options): boolean {
 
