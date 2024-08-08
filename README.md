@@ -8,7 +8,7 @@ Instrucciones para correr y ejecutar app
 npm install
 ````
 
-2. Correr app
+2. Correr app en desarrollo
 
 ````
 npx ts-node src/app --base 7 -s -n table-7 -d 'outputs/multiplication'
