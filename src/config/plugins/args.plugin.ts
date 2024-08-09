@@ -39,7 +39,7 @@ export const yarg = yargs(hideBin(process.argv))
 
     if ( argv.b < 1 ) throw 'Error: Base must be greater than 0';
     if ( argv.b > 10 ) throw 'Error: Base must be less than 10';
-    
+
     if ( argv.l < 1 ) throw 'Error: Limit must be greater than 0';
 
     return true;
