@@ -1,3 +1,7 @@
 node_modules/
 outputs/
 dist/
+coverage/
+
+test-outputs/
+
