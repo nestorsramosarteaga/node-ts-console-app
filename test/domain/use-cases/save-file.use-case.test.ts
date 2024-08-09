@@ -5,11 +5,6 @@ import fs from 'fs';
 
 describe('SaveFileUseCase', () => {
 
-
-  // beforeEach( ()=> {
-  //   // clean up
-  //   fs.rmSync('outputs', { recursive: true, force: true });
-  // });
   const defaultDestination = 'outputs';
 
   const customOptions = {
@@ -17,16 +12,32 @@ describe('SaveFileUseCase', () => {
     fileDestination: 'custom-outputs',
     fileName: 'custom-table-name'
   }
+
   const customFilePath = `${customOptions.fileDestination}/${customOptions.fileName}.txt`;
 
-  afterEach( () => {
-    const outputFolderExists = fs.existsSync(defaultDestination)
-      if ( outputFolderExists ) fs.rmSync(defaultDestination, { recursive: true, force: true });
+  const clean = () => {
+    const outputFolderExists = fs.existsSync(defaultDestination);
+    if ( outputFolderExists ) fs.rmSync(defaultDestination, { recursive: true });
 
     const customOutputFolderExists = fs.existsSync(customOptions.fileDestination)
-      if ( customOutputFolderExists ) fs.rmSync(customOptions.fileDestination, { recursive: true });
-  });
+    if ( customOutputFolderExists ) fs.rmSync(customOptions.fileDestination, { recursive: true });
 
+    const outoputErrorFolderExists = fs.existsSync('output-error');
+    if ( outoputErrorFolderExists ) fs.rmSync('output-error', { recursive: true });
+
+  }
+
+  // beforeEach( ()=> {
+  //   clean();
+  // });
+
+  // afterEach( () => {
+  //   clean();
+  // });
+
+  afterAll( () => {
+    clean();
+  });
 
   test('should save file with default values', () => {
 
@@ -61,5 +72,36 @@ describe('SaveFileUseCase', () => {
     expect( fileContent ).toBe( customOptions.fileContent );
 
   });
+
+
+  test('should return false if directory could not be created', () => {
+
+    const saveFile = new SaveFile();
+    const mkdirSpy = jest.spyOn(fs,'mkdirSync').mockImplementation(
+      () => { throw new Error('Error creating directory') }
+    );
+
+    const result = saveFile.execute(customOptions);
+
+    expect( result ).toBe( false );
+
+    // clear spy
+    mkdirSpy.mockRestore();
+
+  });
+
+  test('should return false if file could not be created ', () => {
+    const saveFile = new SaveFile();
+    const mkdirFileSpy = jest.spyOn(fs,'writeFileSync').mockImplementation(
+      () => { throw new Error('Error writing in file') }
+    );
+
+    const result = saveFile.execute({fileContent: 'This is the custom content'});
+
+    expect( result ).toBe( false );
+
+    // clear spy
+    mkdirFileSpy.mockRestore();
+  })
 
 });
